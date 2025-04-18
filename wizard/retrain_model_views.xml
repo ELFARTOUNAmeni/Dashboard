@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_retrain_model_wizard_form" model="ir.ui.view">
+        <field name="name">retrain.model.wizard.form</field>
+        <field name="model">retrain.model.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Model">
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="model_id"/>
+                        <field name="model_type"/>
+                        <field name="description"/>
+                    </group>
+                    <group>
+                        <field name="model_file" filename="model_filename"/>
+                        <field name="model_filename" invisible="1"/>
+                        <field name="scaler_file" filename="scaler_filename"
+                               invisible="model_type == 'prophet'"
+                               required="model_type != 'prophet'"/>
+                        <field name="scaler_filename" invisible="1"/>
+                        <field name="features_file" filename="features_filename"
+                               invisible="model_type == 'prophet'"
+                               required="model_type != 'prophet'"/>
+                        <field name="features_filename" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Import" name="action_import_model" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_retrain_model_wizard" model="ir.actions.act_window">
+        <field name="name">Import Model</field>
+        <field name="res_model">retrain.model.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+        <menuitem id="menu_retrain_model_wizard"
+              name="Import Model"
+              parent="menu_sales_prediction1"
+              sequence="10"
+              groups="sales_prediction.group_sales_prediction_manager,sales_prediction.group_sales_prediction_admin"
+              action="action_retrain_model_wizard"/>
+</odoo>

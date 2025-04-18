@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="CustomerSegmentationDashboard">
+        <t t-call="web.layout">
+            <div class="customer_segmentation_dashboard">
+                <div class="dashboard-header">
+                    <h1>Customer Segmentation Dashboard</h1>
+                    <button class="btn btn-primary refresh-btn">
+                        <i class="fa fa-refresh"/> Refresh
+                    </button>
+                </div>
+
+                <div class="dashboard-metrics">
+                    <div class="metric-card">
+                        <div class="metric-value" t-esc="widget.metrics.total_segments || 0"/>
+                        <div class="metric-label">Segments</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" t-esc="widget.metrics.total_customers || 0"/>
+                        <div class="metric-label">Customers</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" t-esc="widget.metrics.avg_order_value ? widget.format_value(widget.metrics.avg_order_value, {'digits': [69,2]}) : '0.00'"/>
+                        <div class="metric-label">Avg Order Value</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" t-esc="widget.metrics.avg_order_frequency ? widget.format_value(widget.metrics.avg_order_frequency, {'digits': [69,2]}) : '0.00'"/>
+                        <div class="metric-label">Avg Frequency</div>
+                    </div>
+                </div>
+
+                <div class="segments-grid">
+                    <t t-foreach="widget.segments" t-as="segment">
+                        <div class="segment-card" t-att-data-segment-id="segment.id">
+                            <div class="segment-header">
+                                <h3 t-esc="segment.name"/>
+                                <span class="badge" t-esc="segment.customer_count + ' customers'"/>
+                            </div>
+                            <div class="segment-body">
+                                <div class="segment-stat">
+                                    <span class="stat-value" t-esc="widget.format_value(segment.avg_order_value, {'digits': [69,2]})"/>
+                                    <span class="stat-label">Avg Value</span>
+                                </div>
+                                <div class="segment-stat">
+                                    <span class="stat-value" t-esc="widget.format_value(segment.avg_order_frequency, {'digits': [69,2]})"/>
+                                    <span class="stat-label">Avg Frequency</span>
+                                </div>
+                                <div class="segment-stat">
+                                    <span class="stat-value" t-esc="segment.avg_product_categories"/>
+                                    <span class="stat-label">Categories</span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <div class="charts-section">
+                    <div class="chart-container">
+                        <h3>Customers per Segment</h3>
+                        <canvas id="segmentsChart"/>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Segment Characteristics</h3>
+                        <canvas id="metricsChart"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <record id="action_customer_segmentation_dashboard" model="ir.actions.client">
+        <field name="name">Customer Segmentation Dashboard</field>
+        <field name="tag">customer_segmentation_dashboard</field>
+    </record>
+
+    <menuitem id="menu_customer_segmentation_dashboard"
+              name="Segmentation Dashboard"
+              action="action_customer_segmentation_dashboard"
+              sequence="10"/>
+</odoo>

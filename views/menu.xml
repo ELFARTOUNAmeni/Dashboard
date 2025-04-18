@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Stock Alerts Menu -->
+    <menuitem id="menu_stock_alerts_root" 
+              name="Stock Alerts" 
+              parent="menu_sales_prediction_root"
+              sequence="5"/>
+    
+    <menuitem id="menu_stock_alerts" 
+              name="Alerts" 
+              parent="menu_stock_alerts_root" 
+              action="action_stock_alert" 
+              sequence="1"/>
+    
+    <menuitem id="menu_stock_alert_dashboard" 
+              name="Dashboard" 
+              parent="menu_stock_alerts_root" 
+              action="action_stock_alert_dashboard" 
+              sequence="2"/>
+    
+    <menuitem id="menu_stock_alert_generator" 
+              name="Alert Generators" 
+              parent="menu_stock_alerts_root" 
+              action="action_stock_alert_generator" 
+              sequence="3"/>
+</odoo>
+

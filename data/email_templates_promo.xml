@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Email Template for Promotion Notifications -->
+        <record id="email_template_promotion_notification" model="mail.template">
+            <field name="name">Promotion Notification</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="subject">Special Promotions Just For You!</field>
+            <!-- Fix the email_from field to use a static value -->
+            <field name="email_from">${user.company_id.email}</field>
+            <field name="email_to">${object.email}</field>
+            <field name="lang">${object.lang}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+                <div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif;">
+                    <h2 style="color: #7C7BAD; font-weight: bold;">Hello ${object.name},</h2>
+
+                    <p>We have some special promotions that might interest you!</p>
+
+                    <h3 style="color: #7C7BAD;">Products on Promotion:</h3>
+
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background-color: #7C7BAD; color: white;">
+                            <th style="padding: 8px; text-align: left;">Product</th>
+                            <th style="padding: 8px; text-align: left;">Description</th>
+                            <th style="padding: 8px; text-align: right;">Price</th>
+                        </tr>
+                        % for product in ctx.get('products', []):
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="padding: 8px;">${product.name}</td>
+                            <td style="padding: 8px;">${product.description_sale or ''}</td>
+                            <td style="padding: 8px; text-align: right;">${format_amount(product.lst_price, object.company_id.currency_id)}</td>
+                        </tr>
+                        % endfor
+                    </table>
+
+                    <p style="margin-top: 20px;">
+                        <a href="/shop" style="background-color: #7C7BAD; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                            Shop Now
+                        </a>
+                    </p>
+
+                    <p style="margin-top: 20px; font-size: 12px; color: #888;">
+                        If you do not want to receive these emails in the future, please contact customer service.
+                    </p>
+                </div>
+            ]]></field>
+        </record>
+    </data>
+</odoo>

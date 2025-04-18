@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="customer_segmentation_dashboard_layout" name="Customer Segmentation Dashboard Layout">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+                <t t-call="web.conditional_assets_tests"/>
+            </t>
+            <div class="o_web_client">
+                <header>
+                    <nav class="o_main_navbar">
+                        <a href="/web" class="o_menu_brand">Odoo</a>
+                        <a href="#" class="o_menu_toggle">
+                            <i class="fa fa-bars"/>
+                        </a>
+                        <div class="o_menu_sections">
+                            <t t-foreach="menu_data['children']" t-as="menu">
+                                <div class="dropdown o_menu_section">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <span t-esc="menu['name']"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-foreach="menu['children']" t-as="submenu">
+                                            <a t-att-href="'/web#menu_id=%s&amp;action=%s' % (submenu['id'], submenu['action'] and submenu['action'].split(',')[1] or '')"
+                                               class="dropdown-item"
+                                               t-esc="submenu['name']"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </nav>
+                </header>
+                <div class="o_content">
+                    <div class="o_action_manager">
+                        <t t-raw="0"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

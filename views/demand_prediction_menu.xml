@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <!-- Predictions Menu -->
+        <menuitem id="menu_demand_prediction" name="Create Demand Predictions" parent="menu_sales_prediction_root" sequence="20"/>
+        <menuitem id="menu_demand_prediction_list" name="Demand Predictions" parent="menu_demand_prediction" sequence="10" action="action_demand_prediction"/>
+        <menuitem id="menu_demand_prediction_batch_list" name="Prediction Batches" parent="menu_demand_prediction" sequence="20" action="action_demand_prediction_batch"/>
+        <menuitem id="menu_generate_demand_prediction" name="Generate Predictions" parent="menu_demand_prediction" sequence="30" action="action_generate_demand_prediction_wizard"/>
+
+
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_demand_prediction_model_list" name="Prediction Models" parent="menu_demand_prediction" sequence="10" action="action_demand_prediction_model"/>
+        <menuitem id="menu_demand_prediction_log_list" name="Prediction Logs" parent="menu_demand_prediction" sequence="20" action="action_demand_prediction_log"/>
+
+    </data>
+</odoo>

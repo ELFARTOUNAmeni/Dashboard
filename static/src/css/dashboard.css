@@ -1,0 +1,89 @@
+.o_customer_segmentation_dashboard {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  max-height: calc(100vh - 100px); /* Pour éviter débordement */
+}
+
+.o_customer_segmentation_dashboard .o_dashboard_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.o_customer_segmentation_dashboard .o_dashboard_header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.o_customer_segmentation_dashboard .o_dashboard_header .o_dashboard_actions {
+  display: flex;
+  gap: 8px;
+}
+
+.o_customer_segmentation_dashboard .o_dashboard_grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-start;
+}
+
+.o_customer_segmentation_dashboard .o_dashboard_card {
+  flex: 1 1 calc(33.333% - 16px); /* 3 cartes par ligne, avec espace */
+  min-width: 300px;
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.o_customer_segmentation_dashboard .o_dashboard_card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.o_customer_segmentation_dashboard .o_dashboard_card .card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 16px;
+}
+
+.o_customer_segmentation_dashboard .o_dashboard_card .card-header .card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.o_customer_segmentation_dashboard .o_dashboard_card .card-body {
+  padding: 16px;
+  flex-grow: 1;
+}
+
+.o_customer_segmentation_dashboard .o_dashboard_card .card-value {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 8px 0 0;
+  color: #3f51b5;
+}
+
+.o_customer_segmentation_dashboard .segment-details-table th,
+.o_customer_segmentation_dashboard .segment-details-table td {
+  vertical-align: middle;
+}
+
+.o_customer_segmentation_dashboard .list-group-item .badge {
+  margin-right: 8px;
+}
+
+.o_customer_segmentation_dashboard canvas {
+  max-width: 100%;
+}

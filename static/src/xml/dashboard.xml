@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sales_prediction.CustomerSegmentationDashboard" owl="1">
+        <div class="o_customer_segmentation_dashboard">
+            <div class="o_dashboard_header">
+                <h1>Customer Segmentation Dashboard</h1>
+                <div class="o_dashboard_actions">
+                    <button class="btn btn-primary" t-on-click="onRefreshDashboard">
+                        <i class="fa fa-refresh"/> Refresh
+                    </button>
+                    <button class="btn btn-secondary" t-on-click="onGenerateSegments">
+                        <i class="fa fa-cogs"/> Generate Segments
+                    </button>
+                </div>
+            </div>
+
+            <div class="o_dashboard_content">
+                <t t-if="state.loading">
+                    <div class="d-flex justify-content-center align-items-center p-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-elif="state.error">
+                    <div class="alert alert-danger" role="alert">
+                        <t t-esc="state.error"/>
+                    </div>
+                </t>
+
+                <t t-elif="state.dashboardData">
+                    <!-- Summary Cards -->
+                    <div class="row mt-3">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card o_dashboard_card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Segments</h5>
+                                    <h2 class="card-value">
+                                        <t t-esc="state.dashboardData.segments.length"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card o_dashboard_card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Customers</h5>
+                                    <h2 class="card-value">
+                                        <t t-esc="state.dashboardData.total_customers"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card o_dashboard_card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Segmented Customers</h5>
+                                    <h2 class="card-value">
+                                        <t t-esc="state.dashboardData.segmented_customers"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card o_dashboard_card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Coverage</h5>
+                                    <h2 class="card-value">
+                                        <t t-esc="Math.round((state.dashboardData.segmented_customers / state.dashboardData.total_customers) * 100) || 0"/>%
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Segment Distribution Chart -->
+                    <div class="row mt-4">
+                        <div class="col-lg-6">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Customer Distribution by Segment</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas t-ref="segmentDistributionChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Monthly Sales by Segment</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas t-ref="monthlySalesChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Segment Metrics -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Segment Metrics Comparison</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas t-ref="segmentMetricsChart" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Segment Details -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Segment Details</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Segment</th>
+                                                    <th>Customers</th>
+                                                    <th>Avg Order Value</th>
+                                                    <th>Avg Order Frequency</th>
+                                                    <th>Avg Product Categories</th>
+                                                    <th>Algorithm</th>
+                                                    <th>Last Generated</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="state.dashboardData.segments" t-as="segment" t-key="segment.id">
+                                                    <tr>
+                                                        <td><t t-esc="segment.name"/></td>
+                                                        <td><t t-esc="segment.customer_count"/></td>
+                                                        <td><t t-esc="segment.avg_order_value.toFixed(2)"/></td>
+                                                        <td><t t-esc="segment.avg_order_frequency.toFixed(2)"/></td>
+                                                        <td><t t-esc="segment.avg_product_categories"/></td>
+                                                        <td><t t-esc="segment.algorithm"/></td>
+                                                        <td><t t-esc="segment.last_generated"/></td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-primary me-1" t-on-click="() => this.onViewSegment(segment.id)">View</button>
+                                                            <button class="btn btn-sm btn-secondary" t-on-click="() => this.onViewCustomers(segment.id)">Customers</button>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Products by Segment -->
+                    <div class="row mt-4">
+                        <t t-foreach="state.dashboardData.segments" t-as="segment" t-key="segment.id">
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="card o_dashboard_card">
+                                    <div class="card-header" t-attf-style="background-color: {{segment.color}}33">
+                                        <h5 class="card-title">Top Products for <t t-esc="segment.name"/></h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <t t-set="products" t-value="state.dashboardData.top_products_by_segment[segment.id] || []"/>
+                                        <t t-if="products.length > 0">
+                                            <ul class="list-group">
+                                                <t t-foreach="products" t-as="product" t-key="product.product_id">
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <span><t t-esc="product.product_name"/></span>
+                                                        <div>
+                                                            <span class="badge bg-primary rounded-pill me-2">
+                                                                <t t-esc="product.score.toFixed(2)"/>
+                                                            </span>
+                                                            <button class="btn btn-sm btn-link" t-on-click="() => this.onViewProduct(product.product_id)">View</button>
+                                                        </div>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </t>
+                                        <t t-else="">
+                                            <p class="text-muted">No product recommendations available</p>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

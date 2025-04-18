@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_sales_prediction_root"
+              name="Sales Prediction"
+              web_icon="sales_prediction,static/description/icon.png"
+              sequence="90"/>
+
+    <menuitem id="menu_customer_segmentation"
+              name="Customer Segmentation"
+              parent="menu_sales_prediction_root"
+              sequence="10"/>
+
+    <menuitem id="menu_customer_segment"
+              name="Customer Segments"
+              parent="menu_customer_segmentation"
+              action="action_customer_segment"
+              sequence="10"/>
+
+    <menuitem id="menu_product_recommendation"
+              name="Product Recommendations"
+              parent="menu_customer_segmentation"
+              action="action_product_recommendation"
+              sequence="20"/>
+
+    <menuitem id="menu_generate_segments"
+              name="Generate Segments"
+              parent="menu_customer_segmentation"
+              action="action_generate_segments_wizard"
+              sequence="30"/>
+
+    <menuitem id="menu_create_test_data"
+              name="Create Test Data"
+              parent="menu_customer_segmentation"
+              action="action_create_test_data_wizard"
+              sequence="40"/>
+   <record id="action_sales_dashboard_client" model="ir.actions.client">
+    <field name="name">Sales Dashboard</field>
+    <field name="tag">sales_dashboard</field>
+</record>
+
+<menuitem id="menu_sales_dashboard"
+          name="Sales Dashboard"
+          action="sales_prediction.action_sales_dashboard_client"
+          sequence="5"/>
+
+</odoo>

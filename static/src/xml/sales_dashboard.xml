@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sales_prediction.SalesDashboard" owl="1">
+        <div class="o_sales_dashboard">
+            <div class="o_dashboard_header">
+                <h1>Sales Dashboard</h1>
+                <div class="o_dashboard_actions">
+                    <button class="btn btn-primary" t-on-click="onRefreshDashboard">
+                        <i class="fa fa-refresh"/> Refresh
+                    </button>
+                    <button class="btn btn-secondary" t-on-click="onExportData">
+                        <i class="fa fa-download"/> Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="o_dashboard_filters">
+                <div class="o_filter_item">
+                    <label for="date_from">From:</label>
+                    <input type="date" id="date_from" t-model="state.filters.dateFrom" t-on-change="onFilterChange"/>
+                </div>
+                <div class="o_filter_item">
+                    <label for="date_to">To:</label>
+                    <input type="date" id="date_to" t-model="state.filters.dateTo" t-on-change="onFilterChange"/>
+                </div>
+                <div class="o_filter_item" t-if="state.dashboardData and state.dashboardData.warehouse_filters">
+                    <label for="warehouse">Warehouse:</label>
+                    <select id="warehouse" t-model="state.filters.warehouseId" t-on-change="onFilterChange">
+                        <option value="">All Warehouses</option>
+                        <t t-foreach="state.dashboardData.warehouse_filters" t-as="warehouse" t-key="warehouse.id">
+                            <option t-att-value="warehouse.id"><t t-esc="warehouse.name"/></option>
+                        </t>
+                    </select>
+                </div>
+                <div class="o_filter_item" t-if="state.dashboardData and state.dashboardData.category_filters">
+                    <label for="category">Category:</label>
+                    <select id="category" t-model="state.filters.categoryId" t-on-change="onFilterChange">
+                        <option value="">All Categories</option>
+                        <t t-foreach="state.dashboardData.category_filters" t-as="category" t-key="category.id">
+                            <option t-att-value="category.id"><t t-esc="category.name"/></option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+
+            <div class="o_dashboard_content">
+                <t t-if="state.loading">
+                    <div class="d-flex justify-content-center align-items-center p-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-elif="state.error">
+                    <div class="alert alert-danger" role="alert">
+                        <t t-esc="state.error"/>
+                    </div>
+                </t>
+
+                <t t-elif="state.dashboardData">
+                    <div class="row mt-3">
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Sales</h5>
+                                    <h2 class="card-value">
+                                        <t t-esc="formatCurrency(state.dashboardData.total_sales || 0)"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Quantity Sold</h5>
+                                    <h2 class="card-value">
+                                        <t t-esc="state.dashboardData.total_quantity || 0"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Average Order Value</h5>
+                                    <h2 class="card-value">
+                                        <t t-esc="formatCurrency(state.dashboardData.avg_order_value || 0)"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Sales Trend</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 300px;">
+                                        <canvas t-ref="salesTrendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Sales by Category</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 300px;">
+                                        <canvas t-ref="categoryDistributionChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Sales by Warehouse</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 300px;">
+                                        <canvas t-ref="warehouseDistributionChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Stock Status</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 300px;">
+                                        <canvas t-ref="stockStatusChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Seasonal Sales Analysis</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 300px;">
+                                        <canvas t-ref="seasonalSalesChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Sales by Day of Week</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 300px;">
+                                        <canvas t-ref="dayOfWeekChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Top Selling Products</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover o_dashboard_table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th class="text-end">Quantity Sold</th>
+                                                    <th class="text-end">Amount Sold</th>
+                                                    <th class="text-end">Current Stock</th>
+                                                    <th class="text-end">Predicted Sales</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="state.dashboardData.top_products and state.dashboardData.top_products.length">
+                                                    <t t-foreach="state.dashboardData.top_products" t-as="product" t-key="product.id">
+                                                        <tr>
+                                                            <td><t t-esc="product.name"/></td>
+                                                            <td class="text-end"><t t-esc="product.qty_sold"/></td>
+                                                            <td class="text-end"><t t-esc="formatCurrency(product.amount_sold)"/></td>
+                                                            <td class="text-end"><t t-esc="product.current_stock"/></td>
+                                                            <td class="text-end"><t t-esc="product.prediction_value"/></td>
+                                                            <td>
+                                                                <button class="btn btn-sm btn-primary" t-on-click="() => this.onViewProduct(product.id)">View</button>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                                <t t-else="">
+                                                    <tr>
+                                                        <td colspan="6" class="text-center">No products found</td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 mb-4">
+                            <div class="card o_dashboard_card">
+                                <div class="card-header">
+                                    <h5 class="card-title">Low Stock Products</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover o_dashboard_table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Category</th>
+                                                    <th class="text-end">Sales Quantity</th>
+                                                    <th class="text-end">Stock Quantity</th>
+                                                    <th>Status</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="state.dashboardData.low_stock_products and state.dashboardData.low_stock_products.length">
+                                                    <t t-foreach="state.dashboardData.low_stock_products" t-as="product" t-key="product.id">
+                                                        <tr>
+                                                            <td><t t-esc="product.name"/></td>
+                                                            <td><t t-esc="product.category_name"/></td>
+                                                            <td class="text-end"><t t-esc="product.sales_quantity"/></td>
+                                                            <td class="text-end"><t t-esc="product.stock_quantity"/></td>
+                                                            <td><span class="stock-indicator low"></span> Low Stock</td>
+                                                            <td>
+                                                                <button class="btn btn-sm btn-primary" t-on-click="() => this.onViewProduct(product.id)">View</button>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                                <t t-else="">
+                                                    <tr>
+                                                        <td colspan="6" class="text-center">No low stock products found</td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

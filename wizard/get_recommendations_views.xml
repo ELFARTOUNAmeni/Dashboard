@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_get_recommendations_wizard_form" model="ir.ui.view">
+        <field name="name">get.recommendations.wizard.form</field>
+        <field name="model">get.recommendations.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Product Recommendations">
+                <sheet>
+                    <group>
+                        <field name="partner_id" readonly="1"/>
+                        <field name="segment_id" readonly="1"/>
+                        <field name="recommendation_count" readonly="1"/>
+                    </group>
+                    <field name="recommendation_ids" readonly="1">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="score"/>
+                            <field name="purchase_count"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_add_to_cart" string="Create Quotation with Recommendations"
+                            type="object" class="btn-primary"/>
+                    <field name="recommendation_count" invisible="1"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_get_recommendations_wizard" model="ir.actions.act_window">
+        <field name="name">Product Recommendations</field>
+        <field name="res_model">get.recommendations.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="sales_prediction assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/css" href="/sales_prediction/static/src/css/sales_dashboard.css"/>
+                <!-- Load Chart.js first -->
+                <script type="text/javascript" src="/sales_prediction/static/lib/chart.js"/>
+                <script type="text/javascript" src="/sales_prediction/static/lib/chart.min.js"/>
+                <!-- Then load our dashboard.js -->
+                <script type="text/javascript" src="/sales_prediction/static/src/js/sales_dashboard.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

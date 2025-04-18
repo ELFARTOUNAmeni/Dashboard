@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Demand Prediction Actions -->
+        <record id="action_demand_prediction" model="ir.actions.act_window">
+            <field name="name">Demand Predictions</field>
+            <field name="res_model">demand.prediction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_group_by_product': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first demand prediction
+                </p>
+                <p>
+                    Demand predictions help you plan inventory levels based on expected customer demand.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_demand_prediction_batch" model="ir.actions.act_window">
+            <field name="name">Prediction Batches</field>
+            <field name="res_model">demand.prediction.batch</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_my_batches': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first demand prediction batch
+                </p>
+                <p>
+                    Batches group multiple demand predictions generated at the same time.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_demand_prediction_model" model="ir.actions.act_window">
+            <field name="name">Prediction Models</field>
+            <field name="res_model">demand.prediction.model</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first demand prediction model
+                </p>
+                <p>
+                    Models are used to generate demand predictions based on historical data.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_demand_prediction_log" model="ir.actions.act_window">
+            <field name="name">Prediction Logs</field>
+            <field name="res_model">demand.prediction.log</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_my_logs': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_neutral_face">
+                    No logs found
+                </p>
+                <p>
+                    Logs track operations performed in the demand prediction module.
+                </p>
+            </field>
+        </record>
+
+
+
+
+        <record id="action_generate_demand_prediction_wizard" model="ir.actions.act_window">
+            <field name="name">Generate Demand Predictions</field>
+            <field name="res_model">generate.demand.prediction.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_generate_demand_prediction_wizard_form"/>
+        </record>
+
+    </data>
+</odoo>

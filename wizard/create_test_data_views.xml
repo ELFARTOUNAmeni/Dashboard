@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_create_test_data_wizard_form" model="ir.ui.view">
+        <field name="name">create.test.data.wizard.form</field>
+        <field name="model">create.test.data.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Test Data">
+                <p class="alert alert-info" role="alert">
+                    This will create test customers with orders for testing the segmentation functionality.
+                </p>
+                <group>
+                    <field name="customer_count"/>
+                    <field name="orders_per_customer"/>
+                    <field name="products_per_order"/>
+                </group>
+                <footer>
+                    <button name="action_create_test_data" string="Create Test Data" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_create_test_data_wizard" model="ir.actions.act_window">
+        <field name="name">Create Test Data</field>
+        <field name="res_model">create.test.data.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

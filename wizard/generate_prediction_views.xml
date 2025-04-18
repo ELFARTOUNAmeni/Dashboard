@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_generate_prediction_wizard_form" model="ir.ui.view">
+        <field name="name">generate.prediction.wizard.form</field>
+        <field name="model">generate.prediction.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="forecast_name" placeholder="Enter a name for this forecast"/>
+                            <field name="forecast_start_date"/>
+                            <field name="forecast_days"/>
+                            <field name="product_selection" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="warehouse_id" options="{'no_create': True}"/>
+                            <field name="prediction_period"/>
+                        </group>
+                    </group>
+                    <group string="Products" invisible="product_selection != 'specific'">
+                        <field name="product_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                    <group string="Description">
+                        <field name="forecast_description" placeholder="Add additional details about this forecast..." nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_generate_predictions" string="Generate Predictions" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_generate_prediction_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Predictions</field>
+        <field name="res_model">generate.prediction.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
