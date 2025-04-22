@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue du wizard -->
+    <record id="view_generate_segments_wizard_form" model="ir.ui.view">
+        <field name="name">generate.segments.wizard.form</field>
+        <field name="model">generate.segments.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Customer Segments">
+                <p class="alert alert-info" role="alert">
+                    This will generate customer segments using the selected clustering algorithm based on purchase behavior.
+                    Existing segments will be archived.
+                </p>
+                <group>
+                    <field name="num_segments"/>
+                    <field name="min_orders"/>
+                    <field name="algorithm"/>
+                    <field name="covariance_type"/>
+                </group>
+                <footer>
+                    <button name="action_generate_segments" string="Generate Segments" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour appeler le wizard -->
+    <record id="action_generate_segments_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Customer Segments</field>
+        <field name="res_model">generate.segments.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_generate_segments_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

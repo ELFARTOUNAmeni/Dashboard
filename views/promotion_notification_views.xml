@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_promotion_notification_form" model="ir.ui.view">
+        <field name="name">promotion.notification.form</field>
+        <field name="model">promotion.notification</field>
+        <field name="arch" type="xml">
+            <form string="Promotion Notification">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="date_sent"/>
+                        <field name="product_count"/>
+                        <field name="customer_count"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_promotion_notification_tree" model="ir.ui.view">
+        <field name="name">promotion.notification.tree</field>
+        <field name="model">promotion.notification</field>
+        <field name="arch" type="xml">
+            <tree string="Promotion Notifications">
+                <field name="name"/>
+                <field name="date_sent"/>
+                <field name="product_count"/>
+                <field name="customer_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_promotion_notification" model="ir.actions.act_window">
+        <field name="name">Promotion Notifications</field>
+        <field name="res_model">promotion.notification</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>

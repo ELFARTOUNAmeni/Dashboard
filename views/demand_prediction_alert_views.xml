@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_demand_prediction_alert_tree" model="ir.ui.view">
+        <field name="name">demand.prediction.alert.tree</field>
+        <field name="model">demand.prediction.alert</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="severity=='4'"
+                  decoration-warning="severity=='3'"
+                  decoration-info="severity=='2'"
+                  decoration-success="severity=='1'">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="warehouse_id"/>
+                <field name="alert_type"/>
+                <field name="severity"/>
+                <field name="stock_available"/>
+                <field name="state"/>
+                <field name="date"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_demand_prediction_alert_form" model="ir.ui.view">
+        <field name="name">demand.prediction.alert.form</field>
+        <field name="model">demand.prediction.alert</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_acknowledge" string="Acknowledge" type="object" class="oe_highlight"
+                            modifiers='{"invisible": [["state", "!=", "new"]]}'/>
+                    <button name="action_resolve" string="Mark as Resolved" type="object" class="oe_highlight"
+                            modifiers='{"invisible": [["state", "!=", "acknowledged"]]}'/>
+                    <button name="action_create_purchase_request" string="Create Purchase Request" type="object"
+                            modifiers='{"invisible": [["state", "=", "resolved"]]}'/>
+                    <button name="action_refresh_stock" string="Refresh Stock" type="object"
+                            icon="fa-refresh" class="btn-secondary"/>
+                    <button name="action_send_email_manually" string="Send Email Notification" type="object"
+                            class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,acknowledged,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id" options="{'no_create': True}"/>
+                            <field name="warehouse_id" options="{'no_create': True}"/>
+                            <field name="alert_type"/>
+                            <field name="severity" widget="priority"
+                                   options="{'colors': {'0': 'muted', '1': 'success', '2': 'info', '3': 'warning', '4': 'danger'}}"/>
+                            <field name="stock_available"/>
+                        </group>
+                        <group>
+                            <field name="prediction_id"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Recommended Action">
+                            <field name="recommended_action" readonly="1"/>
+                        </page>
+                        <page string="Action History">
+                            <field name="action_history_ids">
+                                <tree>
+                                    <field name="create_date"/>
+                                    <field name="action_type"/>
+                                    <field name="description"/>
+                                    <field name="user_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_demand_prediction_alert_search" model="ir.ui.view">
+        <field name="name">demand.prediction.alert.search</field>
+        <field name="model">demand.prediction.alert</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="warehouse_id"/>
+                <field name="user_id"/>
+                <separator/>
+                <filter string="Critical" name="critical" domain="[('severity', '=', '4')]"/>
+                <filter string="High" name="high" domain="[('severity', '=', '3')]"/>
+                <filter string="Medium" name="medium" domain="[('severity', '=', '2')]"/>
+                <filter string="Low" name="low" domain="[('severity', '=', '1')]"/>
+                <separator/>
+                <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
+                <filter string="Acknowledged" name="acknowledged" domain="[('state', '=', 'acknowledged')]"/>
+                <filter string="Resolved" name="resolved" domain="[('state', '=', 'resolved')]"/>
+                <separator/>
+                <filter string="Low Stock" name="low_stock" domain="[('alert_type', '=', 'low_stock')]"/>
+                <filter string="High Demand" name="high_demand" domain="[('alert_type', '=', 'high_demand')]"/>
+                <filter string="Stockout Risk" name="stockout_risk" domain="[('alert_type', '=', 'stockout_risk')]"/>
+                <filter string="High Stock" name="high_stock" domain="[('alert_type', '=', 'high_stock')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="group_by_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Warehouse" name="group_by_warehouse" context="{'group_by': 'warehouse_id'}"/>
+                    <filter string="Type" name="group_by_type" context="{'group_by': 'alert_type'}"/>
+                    <filter string="Severity" name="group_by_severity" context="{'group_by': 'severity'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="User" name="group_by_user" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_demand_prediction_alert" model="ir.actions.act_window">
+        <field name="name">Demand Alerts</field>
+        <field name="res_model">demand.prediction.alert</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_new': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No alerts to show.
+            </p>
+            <p>
+                Alerts are automatically generated based on demand predictions and stock levels.
+            </p>
+        </field>
+    </record>
+
+<menuitem id="menu_demand_prediction_alerts"
+          name="🚨 Alert ️"
+          parent="menu_sales_prediction_root"
+          action="action_demand_prediction_alert"/>
+
+
+</odoo>

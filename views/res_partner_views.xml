@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View Inheritance for Res Partner -->
+    <record id="view_partner_form_inherit_sales_prediction" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.sales.prediction</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="get_recommendations" type="object" class="oe_stat_button" icon="fa-star">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Get Recommendations</span>
+                    </div>
+                    <field name="segment_id" invisible="1"/>
+                </button>
+            </xpath>
+            <page name="sales_purchases" position="inside">
+                <group string="Customer Segmentation" name="segmentation">
+                    <field name="segment_id"/>
+                    <field name="total_spent" widget="monetary"/>
+                    <field name="order_count"/>
+                    <field name="avg_order_value" widget="monetary"/>
+                    <field name="days_since_first_order"/>
+                    <field name="days_since_last_order"/>
+                    <field name="order_frequency"/>
+                    <field name="category_count"/>
+                </group>
+            </page>
+        </field>
+    </record>
+
+    <!-- Search Filter Inheritance -->
+    <record id="view_res_partner_filter_inherit_sales_prediction" model="ir.ui.view">
+        <field name="name">res.partner.select.inherit.sales.prediction</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Customer Segment" name="segment_id" context="{'group_by': 'segment_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Button to clean future orders -->
+    <record id="view_partner_form_inherited_clean_orders" model="ir.ui.view">
+        <field name="name">res.partner.form.clean.future.orders</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook/page[@name='sales_purchases']" position="inside">
+                <group>
+                    <button name="clean_future_orders_and_recompute"
+                            type="object"
+                            string="Corriger les commandes futures"
+                            class="btn btn-secondary"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Menu & Action -->
+    <record id="action_res_partner_sales_prediction" model="ir.actions.act_window">
+        <field name="name">Customer Segmentation</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+
+
+</odoo>

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Define the action first, before it's referenced -->
+    <record id="action_generate_prediction_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Prediction</field>
+        <field name="res_model">generate.demand.prediction.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Prediction Batch Views -->
+    <record id="view_sales_prediction_batch_tree" model="ir.ui.view">
+        <field name="name">sales.prediction.batch.tree</field>
+        <field name="model">sales.prediction.batch</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0">
+                <header>
+                  <button name="%(action_generate_prediction_wizard)d" string="Create New Prediction" type="action" class="btn-primary"/>
+                </header>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="prediction_period"/>
+                <field name="model_id"/>
+                <field name="warehouse_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="prediction_count"/>
+                <field name="user_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sales_prediction_batch_form" model="ir.ui.view">
+        <field name="name">sales.prediction.batch.form</field>
+        <field name="model">sales.prediction.batch</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object"
+                            class="oe_highlight"
+                            invisible="state != 'draft'"
+                            groups="sales_prediction.group_sales_prediction_admin"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state not in ('draft', 'confirmed')"
+                            groups="sales_prediction.group_sales_prediction_admin"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'cancelled'"
+                            groups="sales_prediction.group_sales_prediction_admin"/>
+                    <button name="%(action_generate_prediction_wizard)s" string="Create New Prediction" type="action" class="btn-primary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_predictions" type="object" class="oe_stat_button" icon="fa-chart-line">
+                            <field name="prediction_count" widget="statinfo" string="Predictions"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date" readonly="1"/>
+                            <field name="prediction_period" readonly="1"/>
+                            <field name="model_id" readonly="1"/>
+                            <field name="warehouse_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="start_date" readonly="1"/>
+                            <field name="end_date" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Description" invisible="not description">
+                        <field name="description" readonly="1" nolabel="1"/>
+                    </group>
+                </sheet>
+                <!-- Add chatter to the form view -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Rest of your XML file remains the same -->
+    <record id="view_sales_prediction_batch_search" model="ir.ui.view">
+        <field name="name">sales.prediction.batch.search</field>
+        <field name="model">sales.prediction.batch</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="warehouse_id"/>
+                <field name="user_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Period" name="group_by_period" context="{'group_by': 'prediction_period'}"/>
+                    <filter string="Model" name="group_by_model" context="{'group_by': 'model_id'}"/>
+                    <filter string="Warehouse" name="group_by_warehouse" context="{'group_by': 'warehouse_id'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="User" name="group_by_user" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for Prediction Batches -->
+    <record id="action_sales_prediction_batch" model="ir.actions.act_window">
+        <field name="name">Prediction Batches</field>
+        <field name="res_model">sales.prediction.batch</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Update Sales Prediction Views to include batch_id -->
+    <record id="view_sales_prediction_tree" model="ir.ui.view">
+        <field name="name">sales.prediction.tree</field>
+        <field name="model">sales.prediction</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="product_id"/>
+                <field name="warehouse_id"/>
+                <field name="prediction_value"/>
+                <field name="prediction_period"/>
+                <field name="model_id"/>
+                <field name="batch_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sales_prediction_form" model="ir.ui.view">
+        <field name="name">sales.prediction.form</field>
+        <field name="model">sales.prediction</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date" readonly="1"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="warehouse_id" readonly="1"/>
+                            <field name="prediction_value" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="prediction_period" readonly="1"/>
+                            <field name="model_id" readonly="1"/>
+                            <field name="generator_id" readonly="1"/>
+                            <field name="batch_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Date Range" invisible="prediction_period == 'daily'">
+                        <field name="start_date" readonly="1"/>
+                        <field name="end_date" readonly="1"/>
+                    </group>
+                    <group string="Description" invisible="not description">
+                        <field name="description" readonly="1" nolabel="1"/>
+                    </group>
+                </sheet>
+                <!-- Add chatter to the form view -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sales_prediction_search" model="ir.ui.view">
+        <field name="name">sales.prediction.search</field>
+        <field name="model">sales.prediction</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="warehouse_id"/>
+                <field name="prediction_period"/>
+                <field name="batch_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Batch" name="group_by_batch" context="{'group_by': 'batch_id'}"/>
+                    <filter string="Product" name="group_by_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Warehouse" name="group_by_warehouse" context="{'group_by': 'warehouse_id'}"/>
+                    <filter string="Period" name="group_by_period" context="{'group_by': 'prediction_period'}"/>
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'date:day'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for Sales Predictions -->
+    <record id="action_sales_prediction_view" model="ir.actions.act_window">
+        <field name="name">Sales Predictions</field>
+        <field name="res_model">sales.prediction</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Prediction Model Views -->
+    <record id="view_sales_prediction_model_tree" model="ir.ui.view">
+        <field name="name">sales.prediction.model.tree</field>
+        <field name="model">sales.prediction.model</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sales_prediction_model_form" model="ir.ui.view">
+        <field name="name">sales.prediction.model.form</field>
+        <field name="model">sales.prediction.model</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="model_file"/>
+                            <field name="scaler_file"/>
+                            <field name="features_file"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Prediction Models -->
+    <record id="action_sales_prediction_model" model="ir.actions.act_window">
+        <field name="name">Prediction Models</field>
+        <field name="res_model">sales.prediction.model</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Structure -->
+    <!-- Main menu -->
+
+</odoo>

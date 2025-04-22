@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_product_promotion_tree" model="ir.ui.view">
+        <field name="name">product.promotion.tree</field>
+        <field name="model">product.promotion</field>
+        <field name="arch" type="xml">
+            <tree string="Products on Promotion" decoration-danger="date_end &lt; current_date">
+                <field name="product_image" widget="image" options="{'size': [40, 40]}"/>
+                <field name="name"/>
+                <field name="list_price" widget="monetary"/>
+                <field name="promotion_price" widget="monetary"/>
+                <field name="discount_percentage" widget="percentage"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_product_promotion_form" model="ir.ui.view">
+        <field name="name">product.promotion.form</field>
+        <field name="model">product.promotion</field>
+        <field name="arch" type="xml">
+            <form string="Product Promotion">
+                <sheet>
+                    <field name="product_image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="list_price" widget="monetary"/>
+                            <field name="promotion_price" widget="monetary"/>
+                            <field name="discount_percentage" widget="percentage"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="pricelist_item_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_product_promotion_search" model="ir.ui.view">
+        <field name="name">product.promotion.search</field>
+        <field name="model">product.promotion</field>
+        <field name="arch" type="xml">
+            <search string="Search Promotions">
+                <field name="name"/>
+                <field name="product_id"/>
+                <filter string="Active Promotions" name="active_promotions" domain="[('date_end', '>=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Expiring Soon" name="expiring_soon" domain="[('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), ('date_end', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="End Date" name="group_by_date_end" context="{'group_by': 'date_end'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_product_promotion_kanban" model="ir.ui.view">
+        <field name="name">product.promotion.kanban</field>
+        <field name="model">product.promotion</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="product_image"/>
+                <field name="list_price"/>
+                <field name="promotion_price"/>
+                <field name="discount_percentage"/>
+                <field name="date_end"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image: url(#{kanban_image('product.promotion', 'product_image', record.id.raw_value)})" role="img"/>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div>
+                                    <span class="text-muted">Regular: </span>
+                                    <span t-esc="record.list_price.value" class="text-muted"/>
+                                </div>
+                                <div>
+                                    <span class="text-success font-weight-bold">Promo: </span>
+                                    <span t-esc="record.promotion_price.value" class="text-success font-weight-bold"/>
+                                </div>
+                                <div>
+                                    <span class="text-danger font-weight-bold">
+                                        <t t-esc="record.discount_percentage.value"/>% OFF
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="text-muted">Ends: </span>
+                                    <span t-esc="record.date_end.value" class="text-muted"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_product_promotion" model="ir.actions.act_window">
+        <field name="name">Products on Promotion</field>
+        <field name="res_model">product.promotion</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_active_promotions': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No products on promotion found
+            </p>
+            <p>
+                Products on promotion will appear here. You can create promotions by setting up pricelist rules or by adding a price_extra to product variants.
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard Action -->
+    <record id="action_customer_segmentation_dashboard" model="ir.actions.client">
+        <field name="name">Customer Segmentation Dashboard</field>
+        <field name="tag">customer_segmentation_dashboard</field>
+    </record>
+
+
+    <!-- Dashboard Template -->
+    <template id="customer_segmentation_dashboard_template" name="Customer Segmentation Dashboard">
+        <div class="o_customer_segmentation_dashboard">
+            <div class="o_dashboard_header">
+                <h1>Customer Segmentation Dashboard</h1>
+                <div class="o_dashboard_actions">
+                    <button class="btn btn-primary refresh-dashboard">
+                        <i class="fa fa-refresh"/> Refresh
+                    </button>
+                    <button class="btn btn-secondary generate-segments">
+                        <i class="fa fa-cogs"/> Generate Segments
+                    </button>
+                </div>
+            </div>
+
+            <div class="o_dashboard_content">
+                <!-- Summary Cards -->
+                <div class="row mt-3">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card o_dashboard_card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Segments</h5>
+                                <h2 class="card-value total-segments">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card o_dashboard_card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Customers</h5>
+                                <h2 class="card-value total-customers">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card o_dashboard_card">
+                            <div class="card-body">
+                                <h5 class="card-title">Segmented Customers</h5>
+                                <h2 class="card-value segmented-customers">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card o_dashboard_card">
+                            <div class="card-body">
+                                <h5 class="card-title">Coverage</h5>
+                                <h2 class="card-value customer-coverage">0%</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Segment Distribution Chart -->
+                <div class="row mt-4">
+                    <div class="col-lg-6">
+                        <div class="card o_dashboard_card">
+                            <div class="card-header">
+                                <h5 class="card-title">Customer Distribution by Segment</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="segmentDistributionChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card o_dashboard_card">
+                            <div class="card-header">
+                                <h5 class="card-title">Monthly Sales by Segment</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="monthlySalesChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Segment Metrics -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card o_dashboard_card">
+                            <div class="card-header">
+                                <h5 class="card-title">Segment Metrics Comparison</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="segmentMetricsChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Segment Details -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card o_dashboard_card">
+                            <div class="card-header">
+                                <h5 class="card-title">Segment Details</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover segment-details-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Segment</th>
+                                                <th>Customers</th>
+                                                <th>Avg Order Value</th>
+                                                <th>Avg Order Frequency</th>
+                                                <th>Avg Product Categories</th>
+                                                <th>Algorithm</th>
+                                                <th>Last Generated</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Will be filled by JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Products by Segment -->
+                <div class="row mt-4 segment-products-container">
+                    <!-- Will be filled by JS -->
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

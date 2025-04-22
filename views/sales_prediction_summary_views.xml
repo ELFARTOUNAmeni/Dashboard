@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sales Prediction Summary Dashboard -->
+    <record id="sales_prediction_summary_view" model="ir.ui.view">
+        <field name="name">sales.prediction.summary.dashboard</field>
+        <field name="model">sales.prediction.batch</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" create="0">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="prediction_count"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_record_subtitle">
+                                    <span>
+                                        <t t-esc="record.date.value"/>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span class="oe_kanban_status">
+                                            <t t-if="record.state.raw_value == 'draft'">
+                                                <span class="badge badge-secondary">Draft</span>
+                                            </t>
+                                            <t t-if="record.state.raw_value == 'confirmed'">
+                                                <span class="badge badge-success">Confirmed</span>
+                                            </t>
+                                            <t t-if="record.state.raw_value == 'cancelled'">
+                                                <span class="badge badge-danger">Cancelled</span>
+                                            </t>
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span class="badge badge-pill badge-primary">
+                                            <t t-esc="record.prediction_count.value"/>
+                                            Predictions
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_sales_prediction_summary" model="ir.actions.act_window">
+        <field name="name">Prediction Summary</field>
+        <field name="res_model">sales.prediction.batch</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="sales_prediction_summary_view"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No prediction batches yet!
+            </p>
+            <p>
+                Create a new prediction batch to see a summary here.
+            </p>
+        </field>
+    </record>
+
+
+
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sales Prediction Dashboard Views -->
+    <record id="view_sales_prediction_dashboard_tree" model="ir.ui.view">
+        <field name="name">sales.prediction.dashboard.tree</field>
+        <field name="model">sales.prediction.dashboard</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Prediction Dashboard">
+                <field name="date"/>
+                <field name="product_id"/>
+                <field name="category_id"/>
+                <field name="warehouse_id"/>
+                <field name="prediction_value"/>
+                <field name="prediction_period"/>
+                <field name="current_stock"/>
+                <field name="batch_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sales_prediction_dashboard_pivot" model="ir.ui.view">
+        <field name="name">sales.prediction.dashboard.pivot</field>
+        <field name="model">sales.prediction.dashboard</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Prediction Analysis">
+                <field name="product_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="prediction_value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_sales_prediction_dashboard_graph" model="ir.ui.view">
+        <field name="name">sales.prediction.dashboard.graph</field>
+        <field name="model">sales.prediction.dashboard</field>
+        <field name="arch" type="xml">
+            <graph string="Sales Prediction Analysis" type="line">
+                <field name="date" interval="day"/>
+                <field name="prediction_value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_sales_prediction_dashboard_search" model="ir.ui.view">
+        <field name="name">sales.prediction.dashboard.search</field>
+        <field name="model">sales.prediction.dashboard</field>
+        <field name="arch" type="xml">
+            <search string="Sales Prediction Dashboard">
+                <field name="product_id"/>
+                <field name="category_id"/>
+                <field name="warehouse_id"/>
+                <field name="batch_id"/>
+                <field name="model_id"/>
+                <field name="date"/>
+                <filter string="Today" name="today" domain="[('date','=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week" name="this_week" domain="[('date','&gt;=', (context_today() + relativedelta(weeks=-1, days=1, weekday=0)).strftime('%Y-%m-%d')), ('date','&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="this_month" domain="[('date','&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('date','&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Draft" name="draft" domain="[('state','=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state','=', 'confirmed')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state','=', 'cancelled')]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Product" name="product" context="{'group_by':'product_id'}"/>
+                    <filter string="Category" name="category" context="{'group_by':'category_id'}"/>
+                    <filter string="Warehouse" name="warehouse" context="{'group_by':'warehouse_id'}"/>
+                    <filter string="Batch" name="batch" context="{'group_by':'batch_id'}"/>
+                    <filter string="Model" name="model" context="{'group_by':'model_id'}"/>
+                    <filter string="Period" name="period" context="{'group_by':'prediction_period'}"/>
+                    <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                    <filter string="Date" name="date" context="{'group_by':'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Dashboard Actions -->
+    <record id="action_sales_prediction_dashboard" model="ir.actions.act_window">
+        <field name="name">Sales Predictions</field>
+        <field name="res_model">sales.prediction.dashboard</field>
+        <field name="view_mode">graph,pivot,tree</field>
+        <field name="context">{'search_default_confirmed': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No predictions yet!
+            </p>
+            <p>
+                Create a new prediction batch to see predictions here.
+            </p>
+        </field>
+    </record>
+
+</odoo>

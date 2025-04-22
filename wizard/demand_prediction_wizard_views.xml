@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Generate Demand Prediction Wizard View -->
+        <record id="view_generate_demand_prediction_wizard_form" model="ir.ui.view">
+            <field name="name">generate.demand.prediction.wizard.form</field>
+            <field name="model">generate.demand.prediction.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Demand Predictions">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="forecast_name" placeholder="e.g. Q1 2023 Demand Forecast"/>
+                                <field name="forecast_start_date"/>
+                                <field name="forecast_days"/>
+                                <field name="prediction_period"/>
+                                <field name="model_id" domain="[('active', '=', True)]"/>
+                            </group>
+                            <group>
+                                <field name="warehouse_id"/>
+                                <field name="product_selection"/>
+                                <field name="product_ids" widget="many2many_tags"/>
+                                <field name="product_category_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Advanced Options">
+                                <group>
+                                    <field name="seasonality_factor"/>
+                                </group>
+                            </page>
+                            <page string="Description">
+                                <field name="forecast_description" placeholder="Additional details about this demand forecast..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button name="action_generate_demand_predictions"
+                                string="Generate Demand Predictions"
+                                type="object"
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Retrain Demand Model Wizard View -->
+        <record id="view_retrain_demand_model_wizard_form" model="ir.ui.view">
+            <field name="name">retrain.demand.model.wizard.form</field>
+            <field name="model">retrain.demand.model.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Retrain Demand Prediction Model">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="model_id" readonly="1"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                            </group>
+                            <group>
+                                <field name="include_seasonality"/>
+                                <field name="include_lead_time"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_retrain_model"
+                                string="Retrain Model"
+                                type="object"
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

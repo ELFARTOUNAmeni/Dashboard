@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu racine principal pour les prédictions de ventes -->
+    <menuitem id="menu_sales_prediction_root"
+              name="Sales Predictions"
+              sequence="50"
+              groups="sales_prediction.group_sales_prediction_user,sales_prediction.group_sales_prediction_manager,sales_prediction.group_sales_prediction_admin"
+              web_icon="sales_prediction,static/description/icon.png"/>
+
+    <!-- ============= SOUS-MENUS SOUS "Sales Predictions" ============= -->
+
+    <!-- Menu "Dashboards" - Premier sous-menu de la racine -->
+    <menuitem id="menu_sales_dashboard_root"
+              name="Dashboards"
+              parent="menu_sales_prediction_root"
+              sequence="5"
+              groups="sales_prediction.group_sales_prediction_manager,sales_prediction.group_sales_prediction_admin"/>
+
+    <!-- Menu "Customer Segmentation" - Deuxième sous-menu de la racine -->
+    <menuitem id="menu_customer_segmentation"
+              name="Customer Segmentation"
+              parent="menu_sales_prediction_root"
+              sequence="10"/>
+
+    <!-- Menu "Holiday Data" - Troisième sous-menu de la racine -->
+    <menuitem id="menu_holiday_data_root"
+              name="Holiday Data"
+              parent="menu_sales_prediction_root"
+              sequence="15"/>
+
+    <!-- Menu "Create Sales Predictions" - Quatrième sous-menu de la racine -->
+    <menuitem id="menu_sales_prediction1"
+              name="Create Sales Predictions"
+              parent="menu_sales_prediction_root"
+              sequence="50"
+              groups="sales_prediction.group_sales_prediction_user,sales_prediction.group_sales_prediction_manager,sales_prediction.group_sales_prediction_admin"/>
+
+    <!-- ============= SOUS-MENUS SOUS "Dashboards" ============= -->
+
+    <!-- Tableau de bord des ventes -->
+    <menuitem id="menu_sales_dashboard"
+              name="Sales Dashboard"
+              parent="menu_sales_dashboard_root"
+              action="sales_prediction.action_sales_dashboard_client"
+              sequence="5"/>
+
+    <!-- Tableau de bord des prédictions de ventes -->
+    <menuitem id="menu_sales_prediction_dashboard"
+              name="Sales Predictions"
+              parent="menu_sales_dashboard_root"
+              action="action_sales_prediction_dashboard"
+              sequence="10"/>
+
+    <!-- Tableau de bord de segmentation clients -->
+    <menuitem id="menu_customer_segmentation_dashboard"
+              name="Segmentation Dashboard"
+              parent="menu_sales_dashboard_root"
+              action="action_customer_segmentation_dashboard"
+              sequence="10"/>
+
+    <!-- Produits les plus vendus -->
+    <menuitem id="menu_top_selling_products"
+              name="Top Selling Products"
+              parent="menu_sales_dashboard_root"
+              action="action_sales_dashboard"
+              sequence="10"/>
+
+    <!-- Stock des produits -->
+    <menuitem id="menu_product_stock"
+              name="Product Stock"
+              parent="menu_sales_dashboard_root"
+              action="action_product_stock_dashboard"
+              sequence="20"/>
+
+    <!-- Historique des ventes -->
+    <menuitem id="menu_sales_history"
+              name="Sales History"
+              parent="menu_sales_dashboard_root"
+              action="action_sales_history_dashboard"
+              sequence="30"/>
+
+    <!-- Analyse des ventes saisonnières -->
+    <menuitem id="menu_seasonal_sales_analysis"
+              name="Seasonal Impact Analysis"
+              parent="menu_sales_dashboard_root"
+              action="action_seasonal_sales_analysis"
+              sequence="40"/>
+
+    <!-- Analyse de l'impact du jour de la semaine sur les ventes -->
+    <menuitem id="menu_day_of_week_sales_analysis"
+              name="Day of Week Impact"
+              parent="menu_sales_dashboard_root"
+              action="action_day_of_week_sales_analysis"
+              sequence="50"/>
+
+    <!-- Analyse des ventes pendant les jours fériés -->
+    <menuitem id="menu_holiday_sales_analysis"
+              name="Holiday Sales Analysis"
+              parent="menu_sales_dashboard_root"
+              action="action_holiday_sales_analysis"
+              sequence="60"/>
+
+    <!-- Analyse de l'impact des jours fériés -->
+    <menuitem id="menu_holiday_comparison_analysis"
+              name="Holiday Impact Analysis"
+              parent="menu_sales_dashboard_root"
+              action="action_holiday_comparison_analysis"
+              sequence="70"/>
+
+    <!-- Comparaison des ventes vs stock -->
+    <menuitem id="menu_sales_stock_comparison_dashboard"
+              name="Sales vs Stock"
+              parent="menu_sales_dashboard_root"
+              action="action_sales_stock_comparison_dashboard"
+              sequence="75"/>
+
+    <!-- ============= SOUS-MENUS SOUS "Customer Segmentation" ============= -->
+
+    <!-- Segments de clients -->
+    <menuitem id="menu_customer_segment"
+              name="Customer Segments"
+              parent="menu_customer_segmentation"
+              action="action_customer_segment"
+              sequence="10"/>
+
+    <!-- Liste des clients -->
+    <menuitem id="menu_sales_prediction_customers"
+              name="Customers"
+              parent="menu_customer_segmentation"
+              action="action_res_partner_sales_prediction"
+              sequence="20"/>
+
+    <!-- Produits recommandés -->
+    <menuitem id="menu_product_recommendation"
+              name="Product Recommendations"
+              parent="menu_customer_segmentation"
+              action="action_product_recommendation"
+              sequence="20"/>
+
+    <!-- Produits en promotion -->
+    <menuitem id="menu_product_promotion"
+              name="Products on Promotion"
+              parent="menu_customer_segmentation"
+              action="action_product_promotion"
+              sequence="20"/>
+
+    <!-- Notifications de promotion -->
+    <menuitem id="menu_promotion_notification"
+              name="Promotion Notifications"
+              parent="menu_customer_segmentation"
+              action="action_promotion_notification"
+              sequence="30"/>
+
+    <!-- Générer des segments -->
+    <menuitem id="menu_generate_segments"
+              name="Generate Segments"
+              parent="menu_customer_segmentation"
+              action="action_generate_segments_wizard"
+              sequence="30"/>
+
+    <!-- Création de données de test -->
+    <menuitem id="menu_create_test_data"
+              name="Create Test Data"
+              parent="menu_customer_segmentation"
+              action="action_create_test_data_wizard"
+              sequence="40"/>
+
+    <!-- ============= SOUS-MENUS SOUS "Holiday Data" ============= -->
+
+    <!-- Jours fériés -->
+    <menuitem id="menu_holiday_data"
+              name="Holidays"
+              parent="menu_holiday_data_root"
+              action="action_holiday_data"
+              sequence="10"/>
+
+    <!-- Importation des jours fériés -->
+    <menuitem id="menu_holiday_import"
+              name="Import Holidays"
+              parent="menu_holiday_data_root"
+              action="action_holiday_import_wizard"
+              sequence="20"/>
+
+    <!-- ============= SOUS-MENUS SOUS "Create Sales Predictions" ============= -->
+
+    <!-- Résumé des prédictions -->
+    <menuitem id="menu_sales_prediction_summary"
+              name="Prediction Summary"
+              parent="menu_sales_prediction1"
+              action="action_sales_prediction_summary"
+              groups="sales_prediction.group_sales_prediction_user,sales_prediction.group_sales_prediction_manager,sales_prediction.group_sales_prediction_admin"
+              sequence="5"/>
+
+    <!-- Modèles de prédiction -->
+    <menuitem id="menu_sales_prediction_model"
+              name="Prediction Models"
+              parent="menu_sales_prediction1"
+              groups="sales_prediction.group_sales_prediction_user,sales_prediction.group_sales_prediction_manager,sales_prediction.group_sales_prediction_admin"
+              sequence="5"
+              action="action_sales_prediction_model"/>
+
+    <!-- Générer des prédictions - Réservé aux managers et admins -->
+    <menuitem id="menu_generate_prediction_wizard"
+              name="Generate Predictions"
+              parent="menu_sales_prediction1"
+              sequence="15"
+              groups="sales_prediction.group_sales_prediction_manager,sales_prediction.group_sales_prediction_admin"
+              action="action_generate_prediction_wizard"/>
+
+    <!-- Liste des prédictions -->
+    <menuitem id="menu_sales_prediction"
+              name="Predictions"
+              groups="sales_prediction.group_sales_prediction_user,sales_prediction.group_sales_prediction_manager,sales_prediction.group_sales_prediction_admin"
+              parent="menu_sales_prediction1"
+              sequence="25"
+              action="action_sales_prediction_view"/>
+
+
+    <!-- Action client pour le tableau de bord des ventes -->
+    <record id="action_sales_dashboard_client" model="ir.actions.client">
+        <field name="name">Sales Dashboard</field>
+        <field name="tag">sales_dashboard</field>
+    </record>
+</odoo>
